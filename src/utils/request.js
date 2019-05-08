@@ -1,13 +1,14 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
-import store from '../store'
 import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api 的 base_url
+  baseURL: window.BASE_API, // api 的 base_url
   timeout: 5000 // 请求超时时间
 })
+
+axios.defaults.withCredentials = true // 携带cookie
 
 // request拦截器
 service.interceptors.request.use(
@@ -17,7 +18,6 @@ service.interceptors.request.use(
         config.params = {}
       }
       config.params[window.TokenKey] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-      config.params[window.CidKey] = getCid() // 让每个请求携带自定义cid 请根据实际情况自行修改
     }
     return config
   },
@@ -32,15 +32,16 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
+    console.log(res)
     if (response.request.readyState === 4 && response.request.status === 200) {
-      if (res.errorId) {
+      if (res.code >= 10000) {
         Message({
-          message: res.message || 'error',
+          message: res.data + res.code || 'error',
           type: 'error',
           duration: 5 * 1000
         })
 
-        if (res.errorId === 10002 || res.errorId === 10003) {
+        if (res.code === 10010) {
           MessageBox.confirm(
             '你已被登出，可以取消继续留在该页面，或者重新登录',
             '确定登出',

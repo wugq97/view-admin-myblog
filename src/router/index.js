@@ -37,111 +37,111 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
-
   {
-    path: '/example',
+    path: '/article',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
+    name: 'Articles',
+    redirect: '/article/list',
     meta: {
-      title: 'Nested',
-      icon: 'nested'
+      title: '文章管理',
+      icon: 'form'
     },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'list',
+        name: 'ArticleList',
+        component: () => import('@/views/article'),
+        meta: { title: '所有文章', icon: 'table' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        path: 'edit',
+        name: 'ArticleAdd',
+        component: () => import('@/views/article'),
+        meta: { title: '添加文章', icon: 'table' }
       }
     ]
   },
-
   {
-    path: 'external-link',
+    path: '/category',
     component: Layout,
+    name: 'Category',
+    redirect: '/category/list',
+    meta: {
+      title: '分类管理',
+      icon: 'form'
+    },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'list',
+        name: 'CategoryList',
+        component: () => import('@/views/category'),
+        hidden: true,
+        meta: { title: '所有分类', icon: 'table' }
       }
     ]
   },
-
+  {
+    path: '/tag',
+    component: Layout,
+    name: 'Tags',
+    redirect: '/tag/list',
+    meta: {
+      title: '标签管理',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'TagList',
+        component: () => import('@/views/tag'),
+        hidden: true,
+        meta: { title: '所有标签', icon: 'table' }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    name: 'Users',
+    redirect: '/user/tabs',
+    meta: {
+      title: '用户管理',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'tabs',
+        name: 'UserTabs',
+        component: () => import('@/views/user'),
+        redirect: '/user/tabs/admin',
+        hidden: true,
+        meta: { title: '权限', icon: 'table' },
+        children: [
+          {
+            path: 'admin',
+            name: 'admin',
+            component: () => import('@/views/user/admin'),
+            hidden: true,
+            meta: { title: '管理员', icon: 'table' }
+          },
+          {
+            path: 'editor',
+            name: 'editor',
+            component: () => import('@/views/user/editor'),
+            hidden: true,
+            meta: { title: '作者', icon: 'table' }
+          },
+          {
+            path: 'normal',
+            name: 'normal',
+            component: () => import('@/views/user/normal'),
+            hidden: true,
+            meta: { title: '普通用户', icon: 'table' }
+          }
+        ]
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

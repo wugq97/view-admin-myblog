@@ -4,24 +4,23 @@ export function login(username, password) {
   return request({
     url: '/user/login',
     method: 'post',
-    data: {
+    params: {
       username,
       password
     }
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return request({
     url: '/user/info',
-    method: 'get',
-    params: { token }
+    method: 'get'
   })
 }
 
 export function logout() {
   return request({
     url: '/user/logout',
-    method: 'post'
+    method: 'get'
   })
 }
