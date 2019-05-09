@@ -107,8 +107,19 @@ export default {
       this.updateTagForm.description = row.description
     },
     deleteOne(row) {
-      deleteTag(row.id).then(res => {
-        this.queryList()
+      this.$confirm('确定删除该标签, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteTag(row.id).then(res => {
+          this.queryList()
+          this.$message({
+            showClose: true,
+            message: '删除成功',
+            type: 'success'
+          })
+        })
       })
     },
     update() {

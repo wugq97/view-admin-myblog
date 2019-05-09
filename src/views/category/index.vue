@@ -11,20 +11,18 @@
               label="名称"
               width="120"/>
             <el-table-column
-              prop="name"
+              :formatter="formatParent"
+              prop="pid"
               label="父节点"
               width="120"/>
             <el-table-column
               prop="description"
               label="描述"
-              width="150"/>
-            <el-table-column
-              prop="articleNum"
-              label="文章数"/>
+              width="180"/>
             <el-table-column
               label="操作">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="changeTag(scope.row)">编辑</el-button>
+                <el-button type="text" size="small" @click="change(scope.row)">编辑</el-button>
                 <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
               </template>
             </el-table-column>
@@ -42,12 +40,21 @@
       </el-col>
       <el-col :span="10">
         <div class="container reset">
-          <el-form :model="addTagForm" label-width="80px" >
+          <el-form :model="addForm" label-width="80px" >
             <el-form-item label="名称">
-              <el-input v-model="addTagForm.name"/>
+              <el-input v-model="addForm.name"/>
+            </el-form-item>
+            <el-form-item label="父节点">
+              <el-select v-model="addForm.pid" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"/>
+              </el-select>
             </el-form-item>
             <el-form-item label="描述">
-              <el-input v-model="addTagForm.description"/>
+              <el-input v-model="addForm.description"/>
             </el-form-item>
           </el-form>
           <el-button type="primary" class="button" @click="add">新增</el-button>
@@ -58,12 +65,21 @@
       :visible.sync="dialogVisible"
       title="编辑标签"
       width="30%">
-      <el-form :model="updateTagForm" label-width="80px" >
+      <el-form :model="updateForm" label-width="80px" >
         <el-form-item label="名称">
-          <el-input v-model="updateTagForm.name"/>
+          <el-input v-model="updateForm.name"/>
+        </el-form-item>
+        <el-form-item label="父节点">
+          <el-select :disabled="updateSelect" v-model="updateForm.pid" placeholder="请选择" >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="updateTagForm.description"/>
+          <el-input v-model="updateForm.description"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -74,6 +90,7 @@
   </div>
 </template>
 <script>
+import { getCategories, getParentCategories, addCategory, deleteCategory, updateCategory } from '@/api/category'
 export default {
   data() {
     return {
@@ -83,24 +100,116 @@ export default {
       pageSize: 10,
       pageSizes: [1, 5, 10, 15],
       total: 0,
-      addTagForm: {
+      addForm: {
+        pid: '',
         name: '',
         description: ''
       },
-      updateTagForm: {
+      updateForm: {
         id: 0,
+        pid: 0,
         name: '',
         description: ''
-      }
+      },
+      options: [{ label: '无', value: 0 }],
+      parentCategories: [],
+      updateSelect: false
     }
   },
-  mounted() {
+  async mounted() {
+    await this.queryParentCategories()
+    await this.queryList()
   },
   methods: {
-
+    formatParent(row) {
+      return row.pid
+    },
+    add() {
+      addCategory(this.addForm).then(res => {
+        this.addForm = { pid: '', name: '', description: '' }
+        this.queryList()
+        this.queryParentCategories()
+        this.$message({
+          showClose: true,
+          message: '添加成功',
+          type: 'success'
+        })
+      })
+    },
+    update() {
+      updateCategory(this.updateForm).then(res => {
+        this.dialogVisible = false
+        this.queryList()
+        this.queryParentCategories()
+        this.$message({
+          showClose: true,
+          message: '修改成功',
+          type: 'success'
+        })
+      })
+    },
+    change(row) {
+      console.log(this.updateForm)
+      this.updateSelect = false
+      this.dialogVisible = true
+      this.updateForm.id = row.id
+      this.updateForm.name = row.name
+      this.updateForm.description = row.description
+      this.updateForm.pid = row.pid
+      if (row.pid === 0) {
+        this.updateSelect = true
+      }
+    },
+    deleteOne(row) {
+      this.$confirm('确定删除该分类, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteCategory(row.id).then(res => {
+          this.queryList()
+          this.queryParentCategories()
+          this.$message({
+            showClose: true,
+            message: '删除成功',
+            type: 'success'
+          })
+        })
+      })
+    },
+    queryParentCategories() {
+      getParentCategories().then(res => {
+        this.parentCategories = res.data
+        this.options = [{ label: '无', value: 0 }]
+        this.parentCategories.forEach(function(element, index, array) {
+          if (element.pid === 0) {
+            const option = {}
+            option.label = element.name
+            option.value = element.id
+            this.options.push(option)
+          }
+        }, this)
+      })
+    },
+    queryList() {
+      getCategories(this.currentPage, this.pageSize).then(res => {
+        this.tableData = res.data.items
+      })
+    },
+    handleSizeChange() {
+      this.queryList()
+    },
+    handleCurrentChange() {
+      this.queryList()
+    }
   }
 }
 </script>
 <style scoped>
-
+.reset{
+  margin-top: 50px;
+}
+.button{
+  margin-left:80px;
+}
 </style>

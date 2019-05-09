@@ -32,7 +32,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    console.log(res)
     if (response.request.readyState === 4 && response.request.status === 200) {
       if (res.code >= 10000) {
         Message({

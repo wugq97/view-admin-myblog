@@ -56,7 +56,7 @@ export const constantRouterMap = [
       {
         path: 'edit',
         name: 'ArticleAdd',
-        component: () => import('@/views/article'),
+        component: () => import('@/views/article/edit'),
         meta: { title: '添加文章', icon: 'table' }
       }
     ]
