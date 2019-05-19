@@ -9,9 +9,9 @@
       <el-table-column
         prop="account"
         label="用户名"/>
-      <el-table-column
-        prop="email"
-        label="邮箱"/>
+      <!--<el-table-column-->
+        <!--prop="email"-->
+        <!--label="邮箱"/>-->
       <el-table-column
         prop="articleNum"
         label="文章数"/>
@@ -29,7 +29,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      :current-page="currentPage"
+      :current-page.sync="currentPage"
       :page-sizes="pageSizes"
       :page-size="pageSize"
       :total="total"
@@ -97,14 +97,25 @@ export default {
         })
         return
       } else {
-        deleteUser(row.id).then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log('error' + err)
+        this.$confirm('确定删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteUser(row.id).then(res => {
+            this.$message({
+              showClose: true,
+              message: '删除成功',
+              type: 'success'
+            })
+          }).catch(err => {
+            console.log('error' + err)
+          })
         })
       }
     },
-    handleSizeChange() {
+    handleSizeChange(value) {
+      this.pageSize = value
       this.query()
     },
     handleCurrentChange() {

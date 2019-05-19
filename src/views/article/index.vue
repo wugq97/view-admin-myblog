@@ -33,7 +33,7 @@
         <el-table-column
           prop="tags"
           label="标签"
-          width="180"/>
+          width="150"/>
         <el-table-column
           prop="views"
           label="浏览次数"
@@ -54,13 +54,15 @@
         <el-table-column
           label="操作">
           <template slot-scope="scope">
+            <el-button v-if="!scope.row.status" type="text" size="small" @click="recommend(scope.row,1)" >推荐</el-button>
+            <el-button v-else type="text" size="small" @click="recommend(scope.row,0)" >取消推荐</el-button>
             <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
             <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
-        :current-page="currentPage"
+        :current-page.sync="currentPage"
         :page-sizes="pageSizes"
         :page-size="pageSize"
         :total="total"
@@ -73,7 +75,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getArticles, deleteArticle } from '@/api/article'
+import { getArticles, deleteArticle, recommendArticle } from '@/api/article'
 import dateUtil from '@/utils/dateUtil'
 export default {
   data() {
@@ -87,7 +89,8 @@ export default {
       pageSize: 10,
       pageSizes: [1, 5, 10, 15],
       total: 0,
-      categories: []
+      categories: [],
+      need: false
     }
   },
   computed: {
@@ -134,7 +137,6 @@ export default {
   },
   mounted() {
     this.queryList()
-
   },
   methods: {
     formatCategory(row) {
@@ -177,14 +179,24 @@ export default {
       }
       getArticles(uid, parentCategory, childCategory, currentPage, pageSize).then(res => {
         this.tableData = res.data.pageInfo.items
-        this.categories = res.data.categories
+        this.total = res.data.pageInfo.count
+        if (!this.need) {
+          this.categories = res.data.categories
+          this.need = true
+        }
       })
     },
-    handleSizeChange() {
+    handleSizeChange(value) {
+      this.pageSize = value
       this.queryList()
     },
     handleCurrentChange() {
       this.queryList()
+    },
+    recommend(row, num) {
+      recommendArticle(row.id, num).then(res => {
+        row.status = num
+      })
     }
   }
 }

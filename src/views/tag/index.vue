@@ -26,7 +26,7 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            :current-page="currentPage"
+            :current-page.sync="currentPage"
             :page-sizes="pageSizes"
             :page-size="pageSize"
             :total="total"
@@ -98,6 +98,7 @@ export default {
     queryList() {
       getTags(this.currentPage, this.pageSize).then(res => {
         this.tableData = res.data.items
+        this.total = res.data.count
       })
     },
     changeTag(row) {
@@ -135,7 +136,8 @@ export default {
         this.queryList()
       })
     },
-    handleSizeChange() {
+    handleSizeChange(value) {
+      this.pageSize = value
       this.queryList()
     },
     handleCurrentChange() {

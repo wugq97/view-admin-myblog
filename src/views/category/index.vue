@@ -28,7 +28,7 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            :current-page="currentPage"
+            :current-page.sync="currentPage"
             :page-sizes="pageSizes"
             :page-size="pageSize"
             :total="total"
@@ -122,7 +122,13 @@ export default {
   },
   methods: {
     formatParent(row) {
-      return row.pid
+      var name = '无'
+      this.parentCategories.forEach(function(element, index, array) {
+        if (element.id === row.pid) {
+          name = element.name
+        }
+      }, this)
+      return name
     },
     add() {
       addCategory(this.addForm).then(res => {
@@ -194,9 +200,11 @@ export default {
     queryList() {
       getCategories(this.currentPage, this.pageSize).then(res => {
         this.tableData = res.data.items
+        this.total = res.data.count
       })
     },
-    handleSizeChange() {
+    handleSizeChange(value) {
+      this.pageSize = value
       this.queryList()
     },
     handleCurrentChange() {

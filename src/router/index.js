@@ -142,6 +142,25 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/comment',
+    component: Layout,
+    name: 'comment',
+    redirect: '/comment/list',
+    meta: {
+      title: '评论管理',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'commentList',
+        component: () => import('@/views/comment'),
+        hidden: true,
+        meta: { title: '所有评论', icon: 'table' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

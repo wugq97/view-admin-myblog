@@ -61,3 +61,13 @@ export function getArticle(id) {
     method: 'get'
   })
 }
+
+export function recommendArticle(id, status) {
+  return request({
+    url: '/admin/recommend',
+    method: 'post',
+    params: {
+      id, status
+    }
+  })
+}

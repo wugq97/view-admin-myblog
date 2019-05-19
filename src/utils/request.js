@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import { getToken } from '@/utils/auth'
-
+import store from '@/store'
 // 创建axios实例
 const service = axios.create({
   baseURL: window.BASE_API, // api 的 base_url
   timeout: 5000 // 请求超时时间
 })
 
-axios.defaults.withCredentials = true // 携带cookie
+// axios.defaults.withCredentials = true // 携带cookie
 
 // request拦截器
 service.interceptors.request.use(
@@ -39,20 +39,9 @@ service.interceptors.response.use(
           type: 'error',
           duration: 5 * 1000
         })
-
-        if (res.code === 10010) {
-          MessageBox.confirm(
-            '你已被登出，可以取消继续留在该页面，或者重新登录',
-            '确定登出',
-            {
-              confirmButtonText: '重新登录',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }
-          ).then(() => {
-            window.location.href = `/login?redirect=${window.location.href}` // 否则全部重定向到登录页
-          })
-        }
+        store.dispatch('LogOut').then(() => {
+          window.location.href = `http://localhost:9528/#/login?redirect=%2Fdashboard`
+        })
         return Promise.reject(res)
       } else {
         return res

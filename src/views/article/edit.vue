@@ -52,11 +52,13 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"/>
         </el-upload>
       </el-form-item>
-      <el-form-item label="状态">
-        <el-radio-group v-model="article.status">
-          <el-radio :label="0">发布</el-radio>
-          <el-radio :label="1">草稿</el-radio>
-        </el-radio-group>
+      <el-form-item label="推荐">
+        <el-switch
+          v-model="article.status"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          active-value="1"
+          inactive-value="0"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即提交</el-button>
