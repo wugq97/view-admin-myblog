@@ -161,6 +161,25 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/file',
+    component: Layout,
+    name: 'file',
+    redirect: '/file/list',
+    meta: {
+      title: '文件管理',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'fileList',
+        component: () => import('@/views/file'),
+        hidden: true,
+        meta: { title: '所有文件', icon: 'table' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

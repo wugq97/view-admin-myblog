@@ -172,15 +172,38 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteCategory(row.id).then(res => {
-          this.queryList()
-          this.queryParentCategories()
-          this.$message({
-            showClose: true,
-            message: '删除成功',
-            type: 'success'
+        var flag = true
+        if (row.pid === 0) {
+          this.tableData.forEach(function(element) {
+            if (element.pid === row.id) {
+              this.$message({
+                message: '存在子类别，无法删除',
+                type: 'error'
+              })
+              flag = false
+              return
+            }
+          }, this)
+        }
+        if (flag) {
+          deleteCategory(row.id).then(res => {
+            if (res.success) {
+              this.queryList()
+              this.queryParentCategories()
+              this.$message({
+                showClose: true,
+                message: '删除成功',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                showClose: true,
+                message: '删除失败！存在该分类文章',
+                type: 'error'
+              })
+            }
           })
-        })
+        }
       })
     },
     queryParentCategories() {
