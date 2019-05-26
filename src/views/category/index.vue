@@ -101,7 +101,7 @@ export default {
       pageSizes: [1, 5, 10, 15],
       total: 0,
       addForm: {
-        pid: '',
+        pid: 0,
         name: '',
         description: ''
       },
@@ -132,7 +132,7 @@ export default {
     },
     add() {
       addCategory(this.addForm).then(res => {
-        this.addForm = { pid: '', name: '', description: '' }
+        this.addForm = { pid: 0, name: '', description: '' }
         this.queryList()
         this.queryParentCategories()
         this.$message({

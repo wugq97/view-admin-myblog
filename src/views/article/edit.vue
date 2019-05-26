@@ -86,7 +86,7 @@ export default {
         categoryIdChild: 0,
         tagIds: [''],
         img: '',
-        status: 0,
+        status: '0',
         userId: 0
       },
       imageUrl: '',
@@ -95,7 +95,7 @@ export default {
       categories: [],
       parentOptions: [{ label: '无', value: 0 }],
       childOptions: [{ label: '无', value: 0 }],
-      uploadUrl: 'http://localhost:8080/upload/articleImg',
+      uploadUrl: window.BASE_API + 'upload/articleImg',
       serverPath: ''
     }
   },
@@ -172,6 +172,7 @@ export default {
     },
     onSubmit() {
       if (this.check()) {
+        this.article.content = encodeURIComponent(this.article.content)
         if (this.article.id === 0) {
           addArticle(this.article).then(res => {
             this.$message.success('提交成功')
@@ -196,7 +197,7 @@ export default {
         categoryIdChild: 0,
         tagIds: [''],
         img: '',
-        status: 0,
+        status: '0',
         userId: this.role.id
       }
       this.editor.txt.html('')
@@ -205,6 +206,8 @@ export default {
       getArticle(this.article.id).then(res => {
         this.article = res.data
         this.article.tagIds = this.article.tagIds.split(',')
+        this.article.status = this.article.status + ''
+        this.article.content = decodeURIComponent(this.article.content)
         this.editor.txt.html(this.article.content)
       })
     },
@@ -216,6 +219,7 @@ export default {
       // 隐藏“网络图片”tab
       editor.customConfig.showLinkImg = false
       editor.customConfig.uploadImgShowBase64 = true
+      editor.customConfig.zIndex = 998
       editor.create()
       this.editor = editor
     },

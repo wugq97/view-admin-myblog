@@ -125,6 +125,11 @@ export default {
     },
     update() {
       updateTag(this.updateTagForm).then(res => {
+        this.$message({
+          showClose: true,
+          message: '更新成功',
+          type: 'success'
+        })
         this.dialogVisible = false
         this.queryList()
       })

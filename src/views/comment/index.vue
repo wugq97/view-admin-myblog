@@ -44,6 +44,7 @@
 <script>
 import { getComments, deleteComment } from '@/api/comment'
 import DateUtil from '@/utils/dateUtil'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -54,7 +55,17 @@ export default {
       total: 0
     }
   },
+  computed: {
+    ...mapGetters(['role'])
+  },
   mounted() {
+    if (this.role.authority !== 1) {
+      this.$message({
+        message: '权限不足！',
+        type: 'warning'
+      })
+      this.$router.push({ path: '/' })
+    }
     this.query()
   },
   methods: {

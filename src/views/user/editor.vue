@@ -9,9 +9,6 @@
       <el-table-column
         prop="account"
         label="用户名"/>
-      <!--<el-table-column-->
-        <!--prop="email"-->
-        <!--label="邮箱"/>-->
       <el-table-column
         prop="articleNum"
         label="文章数"/>

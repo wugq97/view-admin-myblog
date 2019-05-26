@@ -11,16 +11,29 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
       activeName: 'admin'
     }
   },
+  computed: {
+    ...mapGetters(['role'])
+  },
   watch: {
     $route: function(route) {
       const path = this.$route
       this.activeName = path.name
+    }
+  },
+  mounted() {
+    if (this.role.authority !== 1) {
+      this.$message({
+        message: '权限不足！',
+        type: 'warning'
+      })
+      this.$router.push({ path: '/' })
     }
   },
   methods: {

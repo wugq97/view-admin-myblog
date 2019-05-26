@@ -32,6 +32,7 @@ export const constantRouterMap = [
     redirect: '/dashboard',
     name: 'Dashboard',
     hidden: true,
+    authority: 2,
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard/index')
@@ -46,6 +47,7 @@ export const constantRouterMap = [
       title: '文章管理',
       icon: 'form'
     },
+    authority: 2,
     children: [
       {
         path: 'list',
@@ -70,6 +72,7 @@ export const constantRouterMap = [
       title: '分类管理',
       icon: 'form'
     },
+    authority: 2,
     children: [
       {
         path: 'list',
@@ -89,6 +92,7 @@ export const constantRouterMap = [
       title: '标签管理',
       icon: 'form'
     },
+    authority: 2,
     children: [
       {
         path: 'list',
@@ -108,6 +112,7 @@ export const constantRouterMap = [
       title: '用户管理',
       icon: 'form'
     },
+    authority: 1,
     children: [
       {
         path: 'tabs',
@@ -151,6 +156,7 @@ export const constantRouterMap = [
       title: '评论管理',
       icon: 'form'
     },
+    authority: 1,
     children: [
       {
         path: 'list',
@@ -170,6 +176,7 @@ export const constantRouterMap = [
       title: '文件管理',
       icon: 'form'
     },
+    authority: 1,
     children: [
       {
         path: 'list',
